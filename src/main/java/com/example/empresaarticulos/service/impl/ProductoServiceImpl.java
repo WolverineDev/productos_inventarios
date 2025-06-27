@@ -19,13 +19,13 @@ public class ProductoServiceImpl implements ProductoService{
 
 	Logger logger = LogManager.getLogger(ProductoServiceImpl.class);
 	
+	
 	@Autowired
 	private ProductoRepository _productoRepository;
 	
 	@Autowired
 	private ProductoAdapter _productoAdapter;
-
-
+	
 	
 	/**
 	 * Metodo para crear / actualizar producto
@@ -73,7 +73,8 @@ public class ProductoServiceImpl implements ProductoService{
 		return productoDto;
 	}
 	
-
+	
+	
 	/**
 	 * Metodo para eliminar un producto por ID
 	 * Param id

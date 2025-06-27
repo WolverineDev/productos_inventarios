@@ -32,6 +32,17 @@ el archivo se ubica en productos_inventarios\empresaarticulos\sql
 
 
 
+/*	CREDENCIALES DE AUTENTICACION	*/
+
+Las credenciales usadas en Autenticacion Basica son:
+
+admin:123456
+YWRtaW46MTIzNDU2
+
+En postman se usa: 
+Authorization "Basic YWRtaW46MTIzNDU2"
+
+
 
 /*	ENDPOINTS	*/
 

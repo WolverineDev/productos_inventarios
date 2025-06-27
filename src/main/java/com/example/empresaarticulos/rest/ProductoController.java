@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,12 +33,12 @@ public class ProductoController {
 	 * Param ProductoDTO
 	 */
 	@PostMapping(value = "/almacenar")
-	public ProductoDTO crearProducto(@RequestBody @Validated ProductoDTO productoDto) {
+	public ResponseEntity<ProductoDTO> crearProducto(@RequestBody @Validated ProductoDTO productoDto) {
 		logger.info("Ingresa metodo crearProducto");
 		ProductoDTO productoCrear = new ProductoDTO();
 		productoCrear = _productoService.crearProducto(productoDto);
 		logger.info("Finaliza metodo crearProducto");
-		return productoCrear;
+		return ResponseEntity.ok(productoCrear);
 	}
 	
 	
@@ -46,13 +47,19 @@ public class ProductoController {
 	 * Param id
 	 */
 	@GetMapping(value = "/{idProducto}")
-	public ProductoDTO consultarProductoPorId(@PathVariable String idProducto) {
+	public ResponseEntity<ProductoDTO> consultarProductoPorIdP(@PathVariable String idProducto) {
 		logger.info("Ingresa metodo consultarProductoPorId");
 		ProductoDTO productoDto = new ProductoDTO();
 		productoDto = _productoService.consultarProductoPorId(idProducto);
 		logger.info("Finaliza metodo consultarProductoPorId");
-		return productoDto;
+		if(productoDto.getId() != null) {
+			return ResponseEntity.ok(productoDto);
+		}
+		else {
+			return ResponseEntity.notFound().build();
+		}
 	}
+	
 	
 	
 	/**
@@ -60,21 +67,23 @@ public class ProductoController {
 	 * Param id
 	 */
 	@GetMapping(value = "/eliminar/{idProducto}")
-	public ProductoDTO eliminarProducto(@PathVariable String idProducto) {
+	public ResponseEntity<ProductoDTO> eliminarProducto(@PathVariable String idProducto) {
 		logger.info("Ingresa metodo eliminarProducto");
 		ProductoDTO productoDto = new ProductoDTO();
 		productoDto = _productoService.eliminarProducto(idProducto);
 		logger.info("Finaliza metodo eliminarProducto");
-		return productoDto;
+		return ResponseEntity.ok(productoDto);
 	}
 	
 	
 	@GetMapping(value = "/listaProductos")
-	public List<ProductoDTO> consultarListaProductos() {
+	public ResponseEntity<List<ProductoDTO>> consultarListaProductos() {
 		logger.info("Ingresa metodo consultarListaProductos");
 		List<ProductoDTO> listaProductos = _productoService.consultarListaProductos();
 		logger.info("Finaliza metodo consultarListaProductos");
-		return listaProductos;
+		return ResponseEntity.ok(listaProductos);
 	}
+	
+	
 
 }

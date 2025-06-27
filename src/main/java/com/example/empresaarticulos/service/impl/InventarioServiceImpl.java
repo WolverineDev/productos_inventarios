@@ -10,7 +10,6 @@ import com.example.empresaarticulos.dto.InventarioDTO;
 import com.example.empresaarticulos.dto.ProductoDTO;
 import com.example.empresaarticulos.entities.Inventario;
 import com.example.empresaarticulos.repository.InventarioRepository;
-import com.example.empresaarticulos.rest.ProductoController;
 import com.example.empresaarticulos.service.InventarioService;
 import com.example.empresaarticulos.service.ProductoService;
 
