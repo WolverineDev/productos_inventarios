@@ -1,5 +1,7 @@
 package com.example.empresaarticulos.service.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,12 +10,15 @@ import com.example.empresaarticulos.dto.InventarioDTO;
 import com.example.empresaarticulos.dto.ProductoDTO;
 import com.example.empresaarticulos.entities.Inventario;
 import com.example.empresaarticulos.repository.InventarioRepository;
+import com.example.empresaarticulos.rest.ProductoController;
 import com.example.empresaarticulos.service.InventarioService;
 import com.example.empresaarticulos.service.ProductoService;
 
 
 @Service
 public class InventarioServiceImpl implements InventarioService {
+	
+	Logger logger = LogManager.getLogger(InventarioServiceImpl.class);
 	
 	
 	@Autowired
@@ -33,20 +38,20 @@ public class InventarioServiceImpl implements InventarioService {
 	 */
 	@Override
 	public InventarioDTO crearInventario(InventarioDTO inventarioDto) {
-		System.out.println("Ingresa service actualizarInventarioPorProducto");
+		logger.info("Ingresa service actualizarInventarioPorProducto");
 		InventarioDTO inventarioProd = new InventarioDTO();
 		try {
 			inventarioProd = consultarInventarioPorProducto(inventarioDto.getProducto().getId());
 			if(inventarioProd.getId() == null) {
 				Inventario inventarioEnt = _inventarioAdapter.dtoToEntity(inventarioDto);
 				_inventarioRepository.save(inventarioEnt);
-				System.out.println("Se ha creado el inventario de producto "+inventarioDto.getProducto().getId()+
+				logger.info("Se ha creado el inventario de producto "+inventarioDto.getProducto().getId()+
 						" con "+inventarioDto.getCantidad()+" elementos");
 			}
 		} catch (Exception e) {
-			System.out.println("Error actualizarInventarioPorProducto: "+e.getMessage());
+			logger.error("Error actualizarInventarioPorProducto: "+e.getMessage());
 		}
-		System.out.println("Finaliza service actualizarInventarioPorProducto");
+		logger.info("Finaliza service actualizarInventarioPorProducto");
 		return inventarioDto;
 	}
 	
@@ -58,23 +63,23 @@ public class InventarioServiceImpl implements InventarioService {
 	 */
 	@Override
 	public InventarioDTO actualizarInventarioPorProducto(InventarioDTO inventarioDto) {
-		System.out.println("Ingresa service actualizarInventarioPorProducto");
+		logger.info("Ingresa service actualizarInventarioPorProducto");
 		InventarioDTO inventarioProd = new InventarioDTO();
 		try {
 			inventarioProd = consultarInventarioPorProducto(inventarioDto.getProducto().getId());
 			if(inventarioProd.getId() != null) {
-				System.out.println("Hay cambios en el inventario "+inventarioProd.getId()+
+				logger.info("Hay cambios en el inventario "+inventarioProd.getId()+
 						" de producto "+inventarioProd.getProducto().getNombre()+" con "+inventarioProd.getCantidad()+" elementos");
 				inventarioProd.setCantidad(inventarioDto.getCantidad());
 				Inventario inventarioEnt = _inventarioAdapter.dtoToEntity(inventarioProd);
 				_inventarioRepository.save(inventarioEnt);
-				System.out.println("Actualizado el inventario de producto "+inventarioProd.getProducto().getNombre()+
+				logger.info("Actualizado el inventario de producto "+inventarioProd.getProducto().getNombre()+
 						" a "+inventarioDto.getCantidad()+" elementos");
 			}
 		} catch (Exception e) {
-			System.out.println("Error actualizarInventarioPorProducto: "+e.getMessage());
+			logger.error("Error actualizarInventarioPorProducto: "+e.getMessage());
 		}
-		System.out.println("Finaliza service actualizarInventarioPorProducto");
+		logger.info("Finaliza service actualizarInventarioPorProducto");
 		return inventarioProd;
 	}
 	
@@ -86,7 +91,7 @@ public class InventarioServiceImpl implements InventarioService {
 	 */
 	@Override
 	public InventarioDTO consultarInventarioPorProducto(String idProducto) {
-		System.out.println("Ingresa service consultarInventarioPorProducto");
+		logger.info("Ingresa service consultarInventarioPorProducto");
 		InventarioDTO inventarioDto = new InventarioDTO();
 		ProductoDTO productoDto = new ProductoDTO();
 		try {
@@ -96,19 +101,19 @@ public class InventarioServiceImpl implements InventarioService {
 				Inventario inventarioEnt = _inventarioRepository.findByProductoInventario(productoDto.getId());
 				if(inventarioEnt != null) {
 					inventarioDto = _inventarioAdapter.entityToDto(inventarioEnt, productoDto);
-					System.out.println("Existe información de inventario");
+					logger.info("Existe información de inventario asociado al producto "+productoDto.getNombre());
 				}
 				else {
-					System.out.println("No existe inventario asociado al producto "+productoDto.getNombre());
+					logger.info("No existe inventario asociado al producto "+productoDto.getNombre());
 				}
 			}
 			else {
-				System.out.println("No existe Producto.");
+				logger.info("No existe Producto.");
 			}
 		} catch (Exception e) {
-			System.out.println("Error consultarInventarioPorProducto: "+e.getMessage());
+			logger.error("Error consultarInventarioPorProducto: "+e.getMessage());
 		}
-		System.out.println("Finaliza service consultarInventarioPorProducto");
+		logger.info("Finaliza service consultarInventarioPorProducto");
 		return inventarioDto;
 	}
 	
@@ -119,22 +124,22 @@ public class InventarioServiceImpl implements InventarioService {
 	 * Param idInventario
 	 */
 	public InventarioDTO consultarInventarioPorId(String idInventario) {
-		System.out.println("Ingresa service consultarInventarioPorId");
+		logger.info("Ingresa service consultarInventarioPorId");
 		InventarioDTO inventarioDto = new InventarioDTO();
 		try {
 			Inventario inventarioEnt = _inventarioRepository.findByIdInventario(idInventario);
 			if(inventarioEnt == null) {
-				System.out.println("No existe inventario con el id "+idInventario);
+				logger.info("No existe inventario con el id "+idInventario);
 			}
 			else {
 				ProductoDTO productoDto = _productoService.consultarProductoPorId(inventarioEnt.getProducto());
 				inventarioDto = _inventarioAdapter.entityToDto(inventarioEnt, productoDto);
-				System.out.println("Existe información de inventario");
+				logger.info("Existe información de inventario");
 			}
 		} catch (Exception e) {
-			System.out.println("Error consultarInventarioPorId: "+e.getMessage());
+			logger.error("Error consultarInventarioPorId: "+e.getMessage());
 		}
-		System.out.println("Finaliza service consultarInventarioPorId");
+		logger.info("Finaliza service consultarInventarioPorId");
 		return inventarioDto;
 	}
 	

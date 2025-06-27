@@ -3,6 +3,8 @@ package com.example.empresaarticulos.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import com.example.empresaarticulos.service.ProductoService;
 @Service
 public class ProductoServiceImpl implements ProductoService{
 
+	Logger logger = LogManager.getLogger(ProductoServiceImpl.class);
 	
 	@Autowired
 	private ProductoRepository _productoRepository;
@@ -30,18 +33,18 @@ public class ProductoServiceImpl implements ProductoService{
 	 */
 	@Override
 	public ProductoDTO crearProducto(ProductoDTO productoDto) {
-		System.out.println("Ingresa service crearProducto");
+		logger.info("Ingresa service crearProducto");
 		try {
 			ProductoDTO productoQuery = consultarProductoPorId(productoDto.getId());
 			if(productoQuery != null) {
 				Producto productoEnt = _productoAdapter.dtoToEntity(productoDto);
 				_productoRepository.save(productoEnt);
-				System.out.println("Almacenado producto con id  "+productoDto);
+				logger.info("Almacenado producto con id  "+productoDto);
 			}
 		} catch (Exception e) {
-			System.out.println("Error crearProducto: "+e.getMessage());
+			logger.error("Error crearProducto: "+e.getMessage());
 		}
-		System.out.println("Finaliza service crearProducto");
+		logger.info("Finaliza service crearProducto");
 		return productoDto;
 	}
 
@@ -52,21 +55,21 @@ public class ProductoServiceImpl implements ProductoService{
 	 */
 	@Override
 	public ProductoDTO consultarProductoPorId(String id) {
-		System.out.println("Ingresa service consultarProductoPorId");
+		logger.info("Ingresa service consultarProductoPorId");
 		ProductoDTO productoDto = new ProductoDTO();
 		try {
 			Producto productoEnt = _productoRepository.findByIdProducto(id);
 			if(productoEnt == null) {
-				System.out.println("No existe producto con el id "+id);
+				logger.info("No existe producto con el id "+id);
 			}
 			else {
 				productoDto = _productoAdapter.entityToDto(productoEnt);
-				System.out.println("Existe producto con el id "+id);
+				logger.info("Existe producto con el id "+id);
 			}
 		} catch (Exception e) {
-			System.out.println("Error consultarProductoPorId: "+e.getMessage());
+			logger.error("Error consultarProductoPorId: "+e.getMessage());
 		}
-		System.out.println("Finaliza service consultarProductoPorId");
+		logger.info("Finaliza service consultarProductoPorId");
 		return productoDto;
 	}
 	
@@ -77,19 +80,19 @@ public class ProductoServiceImpl implements ProductoService{
 	 */
 	@Override
 	public ProductoDTO eliminarProducto(String id) {
-		System.out.println("Ingresa service eliminarProducto");
+		logger.info("Ingresa service eliminarProducto");
 		ProductoDTO productoDto = new ProductoDTO();
 		try {
 			ProductoDTO productoQuery = consultarProductoPorId(id);
 			if(productoQuery != null) {
 				Producto productoEnt = _productoAdapter.dtoToEntity(productoQuery);
 				_productoRepository.delete(productoEnt);
-				System.out.println("Eliminado producto con id  "+productoDto);
+				logger.info("Eliminado producto");
 			}
 		} catch (Exception e) {
-			System.out.println("Error eliminarProducto: "+e.getMessage());
+			logger.error("Error eliminarProducto: "+e.getMessage());
 		}
-		System.out.println("Finaliza service eliminarProducto");
+		logger.info("Finaliza service eliminarProducto");
 		return productoDto;
 	}
 
@@ -99,7 +102,7 @@ public class ProductoServiceImpl implements ProductoService{
 	 */
 	@Override
 	public List<ProductoDTO> consultarListaProductos() {
-		System.out.println("Ingresa service consultarListaProductos");
+		logger.info("Ingresa service consultarListaProductos");
 		List<ProductoDTO> listaProductoDto = new ArrayList<>();
 		List<Producto> listaProductoEnt = new ArrayList<>();
 		try {
@@ -110,15 +113,15 @@ public class ProductoServiceImpl implements ProductoService{
 					productoDto = _productoAdapter.entityToDto(prodEnt);
 					listaProductoDto.add(productoDto);
 				}
-				System.out.println("Información de "+listaProductoEnt.size()+" datos");
+				logger.info("Información de "+listaProductoEnt.size()+" datos");
 			}
 			else {
-				System.out.println("No existe información de productos");
+				logger.info("No existe información de productos");
 			}
 		} catch (Exception e) {
-			System.out.println("Error consultarListaProductos: "+e.getMessage());
+			logger.error("Error consultarListaProductos: "+e.getMessage());
 		}
-		System.out.println("Finaliza service consultarListaProductos");
+		logger.info("Finaliza service consultarListaProductos");
 		return listaProductoDto;
 	}
 	
